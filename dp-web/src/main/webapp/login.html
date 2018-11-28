@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Scott开发框架</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="statics/css/bootstrap.min.css">
+    <link rel="stylesheet" href="statics/css/font-awesome.min.css">
+    <link rel="stylesheet" href="statics/css/style.min.css">
+    <link rel="stylesheet" href="statics/css/common.min.css">
+    <link rel="stylesheet" href="statics/css/tabris.css">
+    <link rel="stylesheet" href="statics/css/lib.css">
+</head>
+<style>
+    .box{
+        opacity: 0.9;
+        width:480px;
+        height:480px;
+        background-color:#CCC;
+        top: 30px;
+        z-index: 9;
+        border-radius: 10px;
+    }
+</style>
+<body class="hold-transition login-page">
+<script type="text/javascript">
+    window.onload = function() {
+        //配置
+        var config = {
+            vx: 4,	//小球x轴速度,正为右，负为左
+            vy: 4,	//小球y轴速度
+            height: 2,	//小球高宽，其实为正方形，所以不宜太大
+            width: 2,
+            count: 200,		//点个数
+            color: "190,210,230", 	//点颜色
+            stroke: "190,210,230", 		//线条颜色
+            dist: 6000, 	//点吸附距离
+            e_dist: 20000, 	//鼠标吸附加速距离
+            max_conn: 20 	//点到点最大连接数
+        }
+        //调用
+        CanvasParticle(config);
+    }
+</script>
+
+
+<div id="mydiv" align="center"><br/><br/>
+    <div class="box">
+        <div class="login-box" id="scott" v-cloak style="opacity: 1.0;"><br/>
+            <div class="login-logo" style="margin-top: 20px;">
+                <a href="login.html">
+                    <b>Scott开发框架</b>
+                    <small>V2018.4</small>
+                </a>
+            </div>
+            <div class="login-box-body">
+                <div class="form-group has-feedback">
+                    <input type="text" class="form-control" v-model="username" id="username" placeholder="账号">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="password" class="form-control" v-model="password" id="password" placeholder="密码">
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="text" class="form-control" v-model="captcha" id="captcha" @keyup.enter="login" placeholder="验证码">
+                    <span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;" @click="refreshCode">点击刷新</a>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary btn-block btn-flat" @click="login">立即登录</button>
+                </div>
+            </div>
+            <div class="login-copyright">
+                版权所有 © 2018 Scott - Powered By <a href="http://https://gitee.com/ascott/" target="_blank">Mr.薛</a>.
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div>
+        <div class="hx-box pa">
+            <ul class="pr">
+                <li class="hx-k1 pa0">
+                    <span></span>
+                </li>
+                <li class="hx-k2 pa0">
+                    <span></span>
+                </li>
+                <li class="hx-k3 pa0">
+                    <span></span>
+                </li>
+            </ul>
+        </div>
+        <div class="hx-box1 pa">
+            <ul class="pr">
+                <li class="hx-k1 pa0">
+                    <span></span>
+                </li>
+                <li class="hx-k2 pa0">
+                    <span></span>
+                </li>
+                <li class="hx-k3 pa0">
+                    <span></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="statics/libs/jquery.min.js"></script>
+<script src="statics/libs/vue.min.js"></script>
+<script src="statics/js/canvas-particle.js"></script>
+<script src="statics/plugins/layer/layer.js"></script>
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#scott',
+        data: {
+            username: 'admin',
+            password: '123456',
+            captcha: '',
+            error: false,
+            errorMsg: '',
+            src: 'sys/captcha.jpg'
+        },
+        beforeCreate: function () {
+            if (self != top) {
+                top.location.href = self.location.href;
+            }
+        },
+        methods: {
+            refreshCode: function () {
+                this.src = "sys/captcha.jpg?t=" + $.now();
+            },
+            login: function (event) {
+                if (vm.username == '') {
+                    vm.error = true;
+                    layer.msg('用户名为空');
+                    $('#username').focus();
+                    return false;
+                }
+                if (vm.password == '') {
+                    vm.error = true;
+                    layer.msg('密码为空');
+                    $('#password').focus();
+                    return false;
+                }
+                if (vm.captcha == '') {
+                    vm.error = true;
+                    layer.msg('验证码为空');
+                    $('#captcha').focus();
+                    return false;
+                }
+                var data = "username=" + vm.username + "&password=" + vm.password + "&captcha=" + vm.captcha;
+                $.ajax({
+                    type: "POST",
+                    url: "sys/login",
+                    data: data,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.code == 0) {//登录成功
+                            parent.location.href = 'index.html';
+                        } else {
+                            vm.error = true;
+                            layer.msg(result.msg);
+                            $('#username').focus();
+                            vm.refreshCode();
+                        }
+                    }
+                });
+            }
+        }
+    });
+</script>
+</body>
+</html>
