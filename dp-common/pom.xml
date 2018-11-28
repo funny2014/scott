@@ -10,7 +10,7 @@
     </parent>
     <artifactId>dp-common</artifactId>
     <name>dp-common</name>
-    <url>http://chenlintech.com</url>
+    <url>https://gitee.com/boss_project/scott</url>
     <description>公共模块</description>
 
     <dependencies>

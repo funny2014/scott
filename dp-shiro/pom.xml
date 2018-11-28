@@ -10,7 +10,7 @@
     </parent>
     <artifactId>dp-shiro</artifactId>
     <name>dp-shiro</name>
-    <url>http://chenlintech.com</url>
+    <url>https://gitee.com/boss_project/scott</url>
     <description>权限模块</description>
 
     <dependencies>

@@ -132,7 +132,7 @@ public class AESUtil {
 
     public static void main(String[] args) {
         System.out.println("key\t\tAESEncode\t\tAESDecode");
-        String[] keys = {"test"};
+        String[] keys = {"zaq123ZMT"};
         for (String key : keys) {
             System.out.print(key + "\t");
             String encryptString = aesEncode(key);

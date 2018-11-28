@@ -10,7 +10,7 @@
     </parent>
     <artifactId>dp-quartz</artifactId>
     <name>dp-quartz</name>
-    <url>http://chenlintech.com</url>
+    <url>https://gitee.com/boss_project/scott</url>
     <description>定时任务</description>
 
     <properties>
